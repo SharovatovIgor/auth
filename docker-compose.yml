@@ -1,0 +1,75 @@
+version: "3.8"
+services:
+  db:
+    image: postgres
+    container_name: local_pgdb1
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      # POSTGRES_DB: "test"
+      POSTGRES_USER: user-name
+      POSTGRES_PASSWORD: strong-password
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container1
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
+      PGADMIN_DEFAULT_PASSWORD: strong-password
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+  rabbitmq:
+    image: rabbitmq:3.10.7-management
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}] disk_free_limit 2147483648
+    volumes:
+      - ./rabbitmq:/var/lib/rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+    network_mode: host
+
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: auth
+    environment:
+      - SECRET='FJDVKVNKLSDNVLKSNVLnvdfsnkvlksdMKVDMCV43254'
+      - PORT='3001'
+    ports:
+      - '3001:3001'
+    depends_on:
+      - db
+      - rabbitmq
+      - cache
+    volumes:
+      - .:/src
+    restart: unless-stopped
+    network_mode: host
+    command: npm run start:dev
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
+  cache:
+    driver: local
