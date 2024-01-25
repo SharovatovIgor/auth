@@ -1,20 +1,17 @@
-import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-
-import { UserService } from '../user/user.service';
-import { RedisService } from '../redis/redis.service';
-import { CreateUserDto, UserCreds } from '../user/types';
-import { isVerify, sign } from '../helpers/jwt.helper';
-import { User } from '../entyties/user.entity';
-import { AlredyExist } from '../helpers/customErrors';
-import { ERROR_MESSAGE } from '../helpers/errorMessage';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
+
+import { isVerify, sign } from '../helpers/jwt.helper';
+import { ERROR_MESSAGE } from '../helpers/errorMessage';
+import { AlredyExist } from '../helpers/customErrors';
+
+import { CreateUserDto, UserCreds } from '../user/types';
+import { UserService } from '../user/user.service';
+import { User } from '../entyties/user.entity';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private userService: UserService,
-    @Inject('REDIS_CLIENT') private redisService: RedisService,
-  ) {}
+  constructor(private userService: UserService) {}
 
   async signin(user: CreateUserDto) {
     const oldUser = await this.userService.findByEmail(user.email);

@@ -8,7 +8,6 @@ import {
   Point,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-
 import * as argon2 from 'argon2';
 
 import { Gender } from '../user/types';

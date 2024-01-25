@@ -1,8 +1,10 @@
 import { Body, Controller, Get, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { AppService } from './app.service';
 import { Request, Response } from 'express';
-import { CreateUserValidation, UserCredsDto } from './user/user.dto';
+
+import { AppService } from './app.service';
 import { AuthGuard } from './auth/auth.guard';
+
+import { CreateUserValidation, UserCredsDto } from './user/user.dto';
 
 @Controller()
 export class AppController {

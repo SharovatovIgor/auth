@@ -22,8 +22,4 @@ export class AppService {
   async refresh (refresh: string) {
     return await this.authService.refresh(refresh);
   }
-
-  getHello(): string {
-    return 'Hello World';
-  }
 }

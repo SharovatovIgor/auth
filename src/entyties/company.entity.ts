@@ -5,6 +5,7 @@ import {
   Point,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
 import { User } from './user.entity';
 
 @Entity()

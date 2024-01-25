@@ -1,5 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs';
+
 import { isValidToken } from '../helpers/jwt.helper';
 
 @Injectable()
